@@ -1,3 +1,6 @@
+import 'package:bingyan_todo_list/detail.dart';
+import 'package:bingyan_todo_list/new_todo.dart';
+import 'package:bingyan_todo_list/todo_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:scoped_model/scoped_model.dart';
@@ -21,7 +24,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bingyan Todos',
-      theme: ThemeData(useMaterial3: true),
+      // routes: {"/detail": (context) => const DetailPage()},
+      onGenerateRoute: (settings) {
+        if (settings.name == "/detail") {
+          int id = settings.arguments as int;
+          final task = context.model.allTasks.firstWhere(
+            (element) => element.id == id,
+          );
+          return MaterialPageRoute(
+              builder: (context) => DetailPage(task: task));
+        }
+        return MaterialPageRoute(builder: (context) => const Placeholder());
+      },
+      theme: ThemeData(useMaterial3: true, brightness: Brightness.light),
+      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       home: const HomePage(),
     );
   }
@@ -41,30 +57,75 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Bingyan Todos"),
       ),
-      body: const TaskList(),
+      drawer: const MyNavigationDrawer(),
+      body: const TaskListWidget(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context, builder: (context) => const NewTodoModalPage());
+        },
+        child: const Icon(Icons.add_rounded),
+      ),
     );
   }
 }
 
-class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+class MyNavigationDrawer extends StatefulWidget {
+  const MyNavigationDrawer({
+    super.key,
+  });
 
   @override
-  State<TaskList> createState() => _TaskListState();
+  State<MyNavigationDrawer> createState() => _MyNavigationDrawerState();
 }
 
-class _TaskListState extends State<TaskList> {
+class _MyNavigationDrawerState extends State<MyNavigationDrawer> {
+  int navIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    var tasks = context.listenModel.taskLists ?? [];
+    return NavigationDrawer(
+      onDestinationSelected: (value) {
+        setState(() {
+          navIndex = value;
+        });
+      },
+      selectedIndex: navIndex,
+      children: [
+            const DrawerHeader(
+              child: Text("Bingyan Todos"),
+            ),
+            const NavigationDrawerDestination(
+                icon: Icon(Icons.list_rounded), label: Text("All")),
+          ] +
+          (context.model.taskLists
+                  ?.map((e) => NavigationDrawerDestination(
+                        icon: const Icon(Icons.list_rounded),
+                        label: Text(e.title),
+                      ))
+                  .toList() ??
+              []),
+    );
+  }
+}
+
+class TaskListWidget extends StatefulWidget {
+  const TaskListWidget({super.key});
+
+  @override
+  State<TaskListWidget> createState() => _TaskListWidgetState();
+}
+
+class _TaskListWidgetState extends State<TaskListWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var tasks = context.listenModel.allTasks;
     if (tasks.isNotEmpty) {
       return ListView.builder(
           itemCount: tasks.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(tasks[index].title),
-              onTap: () {},
-            );
+            final task = tasks[index];
+            return ItemCard(task: task);
           });
     } else {
       return const Placeholder();
