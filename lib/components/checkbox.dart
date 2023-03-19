@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '/model.dart';
 
-class TodoCheckBox extends StatefulWidget {
-  const TodoCheckBox({
+class TodoCheckbox extends StatefulWidget {
+  const TodoCheckbox({
     super.key,
     this.priority = Priority.none,
     required this.onChanged,
@@ -13,10 +13,10 @@ class TodoCheckBox extends StatefulWidget {
   final void Function(bool) onChanged;
 
   @override
-  State<TodoCheckBox> createState() => _TodoCheckBoxState();
+  State<TodoCheckbox> createState() => _TodoCheckboxState();
 }
 
-class _TodoCheckBoxState extends State<TodoCheckBox> {
+class _TodoCheckboxState extends State<TodoCheckbox> {
   bool done = false;
 
   Color colorByPriority() {
@@ -35,6 +35,7 @@ class _TodoCheckBoxState extends State<TodoCheckBox> {
   @override
   Widget build(BuildContext context) {
     return Checkbox(
+      side: BorderSide(color: colorByPriority(), width: 2),
       activeColor: colorByPriority(),
       value: done,
       onChanged: (value) {
