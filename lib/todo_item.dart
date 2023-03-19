@@ -31,10 +31,17 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      // dense: true,
+      horizontalTitleGap: 0,
       isThreeLine: true,
-      leading: TodoCheckBox(
-        priority: Priority.none,
-        onChanged: (value) {},
+      leading: SizedBox(
+        width: 30,
+        child: Center(
+          child: TodoCheckbox(
+            priority: task.priority,
+            onChanged: (value) {},
+          ),
+        ),
       ),
       title: Text(task.title),
       subtitle: Text(task.description ?? "..."),
