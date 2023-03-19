@@ -1,5 +1,7 @@
-import 'package:bingyan_todo_list/model.dart';
+import 'package:bingyan_todo_list/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
+
+import 'package:bingyan_todo_list/model.dart';
 
 class NewTodoModalPage extends StatefulWidget {
   const NewTodoModalPage({super.key});
@@ -11,6 +13,8 @@ class NewTodoModalPage extends StatefulWidget {
 class _NewTodoModalPageState extends State<NewTodoModalPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  DateTime? dueTime;
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +41,43 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
         ButtonBar(
           children: [
             ElevatedButton.icon(
-              onPressed: () {
-                final isar = context.model.isar;
-                isar.writeTxnSync(() {
-                  isar.tasks.putSync(Task(
-                    title: _titleController.text,
-                    description: _descriptionController.text,
-                    created: DateTime.now(),
-                  ));
+              onPressed: () async {
+                final tmpTime = await showDatePicker(
+                  context: context,
+                  initialDate: dueTime ?? DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                );
+                setState(() {
+                  dueTime = tmpTime;
                 });
-                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.date_range_rounded),
+              label: Text(dueTime?.humanizedPromisingDate ?? "Date"),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                if (_titleController.text.isEmpty) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          icon: Icon(Icons.error_outline_rounded),
+                          title: Text("Title can't  be empty!"),
+                        );
+                      });
+                } else {
+                  final isar = context.model.isar;
+                  isar.writeTxnSync(() {
+                    isar.tasks.putSync(Task(
+                      title: _titleController.text,
+                      description: _descriptionController.text,
+                      created: DateTime.now(),
+                      due: dueTime,
+                    ));
+                  });
+                  Navigator.of(context).pop();
+                }
               },
               icon: const Icon(Icons.check_rounded),
               label: const Text("Add"),
