@@ -11,6 +11,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
+      direction: DismissDirection.endToStart,
       key: Key(task.id.toString()),
       background: Container(color: Colors.red),
       onDismissed: (direction) {
@@ -29,10 +30,7 @@ class ItemCard extends StatelessWidget {
         leading: SizedBox(
           width: 30,
           child: Center(
-            child: TodoCheckbox(
-              priority: task.priority,
-              onChanged: (value) {},
-            ),
+            child: TodoCheckbox(task: task),
           ),
         ),
         title: Text(task.title),

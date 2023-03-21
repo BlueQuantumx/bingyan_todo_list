@@ -3,16 +3,26 @@ extension AdaptiveDuration on Duration {
     if (inDays >= 1) {
       return "$inDays days";
     }
-    if (inHours >= 1) {
-      return "$inHours hours";
-    }
-    return "$inMinutes minutes";
+    // if (inHours >= 1) {
+    //   return "$inHours hours";
+    // }
+    // return "$inMinutes minutes";
+    return "Today";
   }
 }
 
 extension TimeUtil on DateTime {
   String get toDueTimeString {
-    final diff = difference(DateTime.now());
+    final diff = difference(DateTime.now().copyWith(
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+    ));
+    if (diff.inDays == 0) {
+      return "Today";
+    }
     if (diff.isNegative) {
       return "Passed ${(-diff).adaptiveString}";
     }

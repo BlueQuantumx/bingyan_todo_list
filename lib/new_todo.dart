@@ -15,6 +15,7 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
   final _descriptionController = TextEditingController();
 
   DateTime? dueTime;
+  Priority priority = Priority.none;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,28 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
         ),
         ButtonBar(
           children: [
-            ElevatedButton.icon(
+            TextButton.icon(
+              onPressed: () async {
+                final tmpPriority = await showMenu(
+                  context: context,
+                  position: RelativeRect.fill,
+                  items: Priority.values
+                      .map((e) => PopupMenuItem(
+                            value: e,
+                            child: Text(e.name),
+                          ))
+                      .toList(),
+                );
+                setState(() {
+                  priority = tmpPriority ?? Priority.none;
+                });
+              },
+              icon: const Icon(Icons.menu_rounded),
+              label: Text(
+                priority == Priority.none ? "Priority" : priority.name,
+              ),
+            ),
+            TextButton.icon(
               onPressed: () async {
                 final tmpTime = await showDatePicker(
                   context: context,
@@ -55,7 +77,7 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
               icon: const Icon(Icons.date_range_rounded),
               label: Text(dueTime?.humanizedPromisingDate ?? "Date"),
             ),
-            ElevatedButton.icon(
+            TextButton.icon(
               onPressed: () {
                 if (_titleController.text.isEmpty) {
                   showDialog(
@@ -82,13 +104,13 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
               icon: const Icon(Icons.check_rounded),
               label: const Text("Add"),
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close_rounded),
-              label: const Text("Cancel"),
-            ),
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   icon: const Icon(Icons.close_rounded),
+            //   label: const Text("Cancel"),
+            // ),
           ],
         )
       ]),

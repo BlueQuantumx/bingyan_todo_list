@@ -5,22 +5,18 @@ import '/model.dart';
 class TodoCheckbox extends StatefulWidget {
   const TodoCheckbox({
     super.key,
-    this.priority = Priority.none,
-    required this.onChanged,
+    required this.task,
   });
 
-  final Priority priority;
-  final void Function(bool) onChanged;
+  final Task task;
 
   @override
   State<TodoCheckbox> createState() => _TodoCheckboxState();
 }
 
 class _TodoCheckboxState extends State<TodoCheckbox> {
-  bool done = false;
-
   Color colorByPriority() {
-    switch (widget.priority) {
+    switch (widget.task.priority) {
       case Priority.high:
         return Colors.red;
       case Priority.midium:
@@ -37,12 +33,15 @@ class _TodoCheckboxState extends State<TodoCheckbox> {
     return Checkbox(
       side: BorderSide(color: colorByPriority(), width: 2),
       activeColor: colorByPriority(),
-      value: done,
+      value: context.model.isar.tasks.getSync(widget.task.id)!.done,
       onChanged: (value) {
-        widget.onChanged(value!);
-        setState(() {
-          done = value;
-        });
+        final isar = context.model.isar;
+        isar.writeTxnSync(
+          () {
+            isar.tasks.putSync(widget.task..done = value!);
+          },
+        );
+        setState(() {});
       },
     );
   }
