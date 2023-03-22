@@ -21,11 +21,15 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Column(children: [
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
         TextField(
+          autofocus: true,
           controller: _titleController,
           decoration: const InputDecoration(
-              hintText: "Title", filled: true, border: OutlineInputBorder()),
+            hintText: "Title",
+            filled: true,
+            border: OutlineInputBorder(),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -34,33 +38,32 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
             decoration: const InputDecoration(
                 hintText: "Description",
                 filled: true,
-                border: InputBorder.none),
-            minLines: 5,
-            maxLines: 10,
+                border: OutlineInputBorder()),
+            // minLines: 1,
+            // maxLines: 10,
           ),
         ),
         ButtonBar(
           children: [
-            TextButton.icon(
-              onPressed: () async {
-                final tmpPriority = await showMenu(
-                  context: context,
-                  position: RelativeRect.fill,
-                  items: Priority.values
-                      .map((e) => PopupMenuItem(
-                            value: e,
-                            child: Text(e.name),
-                          ))
-                      .toList(),
-                );
+            PopupMenuButton(
+              initialValue: priority,
+              onSelected: (value) {
                 setState(() {
-                  priority = tmpPriority ?? Priority.none;
+                  priority = value;
                 });
               },
-              icon: const Icon(Icons.menu_rounded),
-              label: Text(
-                priority == Priority.none ? "Priority" : priority.name,
+              icon: Icon(
+                Icons.priority_high_rounded,
+                color: colorByPriority(priority),
               ),
+              itemBuilder: (context) {
+                return Priority.values
+                    .map((e) => PopupMenuItem(
+                          value: e,
+                          child: Text(e.name),
+                        ))
+                    .toList();
+              },
             ),
             TextButton.icon(
               onPressed: () async {
@@ -85,7 +88,7 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
                       builder: (context) {
                         return const AlertDialog(
                           icon: Icon(Icons.error_outline_rounded),
-                          title: Text("Title can't  be empty!"),
+                          title: Text("Title can't be empty!"),
                         );
                       });
                 } else {
@@ -104,13 +107,6 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
               icon: const Icon(Icons.check_rounded),
               label: const Text("Add"),
             ),
-            // ElevatedButton.icon(
-            //   onPressed: () {
-            //     Navigator.of(context).pop();
-            //   },
-            //   icon: const Icon(Icons.close_rounded),
-            //   label: const Text("Cancel"),
-            // ),
           ],
         )
       ]),

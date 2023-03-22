@@ -62,7 +62,15 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
-              context: context, builder: (context) => const NewTodoModalPage());
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => AnimatedPadding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              duration: Duration.zero,
+              child: const NewTodoModalPage(),
+            ),
+          );
         },
         child: const Icon(Icons.add_rounded),
       ),
