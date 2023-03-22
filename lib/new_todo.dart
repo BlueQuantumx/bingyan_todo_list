@@ -1,3 +1,4 @@
+import 'package:bingyan_todo_list/components/task_list.dart';
 import 'package:bingyan_todo_list/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
 
@@ -39,8 +40,6 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
                 hintText: "Description",
                 filled: true,
                 border: OutlineInputBorder()),
-            // minLines: 1,
-            // maxLines: 10,
           ),
         ),
         ButtonBar(
@@ -92,15 +91,14 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
                         );
                       });
                 } else {
-                  final isar = context.model.isar;
-                  isar.writeTxnSync(() {
-                    isar.tasks.putSync(Task(
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      created: DateTime.now(),
-                      due: dueTime,
-                    ));
-                  });
+                  animatedListStateKey.currentState!
+                      .insertItem(context.model.tasks.length);
+                  context.model.addTask(Task(
+                    title: _titleController.text,
+                    description: _descriptionController.text,
+                    created: DateTime.now(),
+                    due: dueTime,
+                  ));
                   Navigator.of(context).pop();
                 }
               },

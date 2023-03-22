@@ -1,6 +1,6 @@
+import 'package:bingyan_todo_list/components/task_list.dart';
 import 'package:bingyan_todo_list/detail.dart';
 import 'package:bingyan_todo_list/new_todo.dart';
-import 'package:bingyan_todo_list/todo_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:scoped_model/scoped_model.dart';
@@ -9,7 +9,7 @@ import 'model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await TodoModel().init();
+  TodoModel().init();
 
   runApp(ScopedModel(
     model: TodoModel(),
@@ -114,29 +114,5 @@ class _MyNavigationDrawerState extends State<MyNavigationDrawer> {
                   .toList() ??
               []),
     );
-  }
-}
-
-class TaskListWidget extends StatefulWidget {
-  const TaskListWidget({super.key});
-
-  @override
-  State<TaskListWidget> createState() => _TaskListWidgetState();
-}
-
-class _TaskListWidgetState extends State<TaskListWidget> {
-  @override
-  Widget build(BuildContext context) {
-    var tasks = context.listenModel.allTasks;
-    if (tasks.isNotEmpty) {
-      return ListView.builder(
-          itemCount: tasks.length,
-          itemBuilder: (context, index) {
-            final task = tasks[index];
-            return ItemCard(task: task);
-          });
-    } else {
-      return const Placeholder();
-    }
   }
 }

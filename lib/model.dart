@@ -15,17 +15,30 @@ extension TodoModelExtension on BuildContext {
   }
 }
 
+Color colorByPriority(Priority priority) {
+  switch (priority) {
+    case Priority.high:
+      return Colors.red;
+    case Priority.midium:
+      return Colors.yellow;
+    case Priority.low:
+      return Colors.blue;
+    default:
+      return Colors.grey;
+  }
+}
+
 class TodoModel extends Model {
   static TodoModel? _todoModel;
 
   TodoModel.inner() {
     isar = Isar.openSync([TaskListSchema, TaskSchema]);
-    var stream = isar.tasks.watchLazy(fireImmediately: true);
-    stream.listen(
-      (event) {
-        notifyListeners();
-      },
-    );
+    // var stream = isar.tasks.watchLazy(fireImmediately: true);
+    // stream.listen(
+    //   (event) {
+    //     notifyListeners();
+    //   },
+    // );
     init();
   }
 
@@ -34,17 +47,42 @@ class TodoModel extends Model {
   }
 
   List<TaskList>? taskLists;
+  late List<Task> tasks;
 
   late Isar isar;
 
-  Future<void> init() async {
-    taskLists = await isar.taskLists.where().findAll();
+  void init() {
+    tasks = isar.tasks.where().sortByDue().findAllSync();
+    // taskLists = await isar.taskLists.where().findAll();
   }
 
-  List<Task> get allTasks => isar.tasks.where().sortByDue().findAllSync();
+  List<Task> get allTasks => tasks;
 
-  Future<void> addTask(Task task) async {
-    await isar.tasks.put(task);
+  Future<void> addTask(Task task, [int? index]) async {
+    if (index != null) {
+      tasks.insert(index, task);
+    } else {
+      tasks.add(task);
+    }
+    notifyListeners();
+    isar.writeTxn(() async {
+      await isar.tasks.put(task);
+    });
+  }
+
+  Future<void> modifyTask(Task task) async {
+    isar.writeTxn(() async {
+      await isar.tasks.put(task);
+    });
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(Task task) async {
+    tasks.remove(task);
+    isar.writeTxn(() async {
+      await isar.tasks.delete(task.id);
+    });
+    notifyListeners();
   }
 }
 
