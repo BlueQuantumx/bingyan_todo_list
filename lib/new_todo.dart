@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:bingyan_todo_list/model.dart';
 
-class NewTodoModalPage extends StatefulWidget {
-  const NewTodoModalPage({super.key});
+class NewTodoModalSheet extends StatefulWidget {
+  const NewTodoModalSheet({super.key});
 
   @override
-  State<NewTodoModalPage> createState() => _NewTodoModalPageState();
+  State<NewTodoModalSheet> createState() => _NewTodoModalSheetState();
 }
 
-class _NewTodoModalPageState extends State<NewTodoModalPage> {
+class _NewTodoModalSheetState extends State<NewTodoModalSheet> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
@@ -98,6 +98,7 @@ class _NewTodoModalPageState extends State<NewTodoModalPage> {
                     description: _descriptionController.text,
                     created: DateTime.now(),
                     due: dueTime,
+                    priority: priority,
                   ));
                   Navigator.of(context).pop();
                 }

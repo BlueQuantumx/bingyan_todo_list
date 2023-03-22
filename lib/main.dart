@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               duration: Duration.zero,
-              child: const NewTodoModalPage(),
+              child: const NewTodoModalSheet(),
             ),
           );
         },
