@@ -95,7 +95,9 @@ class _NewTodoModalSheetState extends State<NewTodoModalSheet> {
                       .insertItem(context.model.tasks.length);
                   context.model.addTask(Task(
                     title: _titleController.text,
-                    description: _descriptionController.text,
+                    description: _descriptionController.text.isEmpty
+                        ? null
+                        : _descriptionController.text,
                     created: DateTime.now(),
                     due: dueTime,
                     priority: priority,
