@@ -79,26 +79,39 @@ class _DetailPageState extends State<DetailPage> {
             TextField(
               controller: _titleController,
               decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Title"
-              ),
+                  border: InputBorder.none, hintText: "Title"),
+              onTapOutside: (event) {
+                final value = _titleController.text;
+                if (value.isEmpty) return;
+                context.model.modifyTask(task..title = value);
+              },
               onSubmitted: (value) {
                 if (value.isEmpty) return;
                 context.model.modifyTask(task..title = value);
               },
             ),
             const Divider(),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Description",
+            Expanded(
+              child: TextField(
+                expands: true,
+                maxLines: null,
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Description",
+                ),
+                onTapOutside: (event) {
+                  final value = _descriptionController.text;
+                  context.model.modifyTask(
+                    task..description = value.isEmpty ? null : value,
+                  );
+                },
+                onSubmitted: (value) {
+                  context.model.modifyTask(
+                    task..description = value.isEmpty ? null : value,
+                  );
+                },
               ),
-              onSubmitted: (value) {
-                context.model.modifyTask(
-                  task..description = value.isEmpty ? null : value,
-                );
-              },
             )
           ],
         ),
