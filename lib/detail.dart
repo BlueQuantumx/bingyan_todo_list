@@ -80,6 +80,7 @@ class _DetailPageState extends State<DetailPage> {
               controller: _titleController,
               decoration: const InputDecoration(
                 border: InputBorder.none,
+                hintText: "Title"
               ),
               onSubmitted: (value) {
                 if (value.isEmpty) return;
@@ -89,9 +90,9 @@ class _DetailPageState extends State<DetailPage> {
             const Divider(),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: (task.description == null ? "Description" : null),
+                hintText: "Description",
               ),
               onSubmitted: (value) {
                 context.model.modifyTask(
