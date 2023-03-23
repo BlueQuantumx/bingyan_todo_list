@@ -24,6 +24,7 @@ class _NewTodoModalSheetState extends State<NewTodoModalSheet> {
       padding: const EdgeInsets.all(20.0),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         TextField(
+          maxLength: 20,
           autofocus: true,
           controller: _titleController,
           decoration: const InputDecoration(

@@ -78,6 +78,7 @@ class _DetailPageState extends State<DetailPage> {
           children: [
             TextField(
               controller: _titleController,
+              maxLength: 20,
               decoration: const InputDecoration(
                   border: InputBorder.none, hintText: "Title"),
               onTapOutside: (event) {
