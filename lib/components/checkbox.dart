@@ -20,6 +20,7 @@ class _TodoCheckboxState extends State<TodoCheckbox> {
     return Checkbox(
       side: BorderSide(color: colorByPriority(widget.task.priority), width: 2),
       activeColor: colorByPriority(widget.task.priority),
+      checkColor: Theme.of(context).scaffoldBackgroundColor,
       value: widget.task.done,
       onChanged: (value) {
         context.model.modifyTask(widget.task..done = value!);
