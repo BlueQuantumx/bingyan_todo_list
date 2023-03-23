@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bingyan_todo_list/components/task_list.dart';
 import 'package:flutter/material.dart';
 
@@ -48,9 +50,18 @@ class ItemCard extends StatelessWidget {
               child: TodoCheckbox(task: task),
             ),
           ),
-          title: Text(task.title),
-          subtitle: Text(task.description ?? "..."),
-          trailing: Text(task.due?.toDueTimeString ?? ""),
+          title: Text(
+            task.title,
+            maxLines: 1,
+          ),
+          subtitle: Text(
+            task.description ?? "",
+            maxLines: 1,
+          ),
+          trailing: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(task.due?.toDueTimeString ?? ""),
+          ),
           onTap: () {
             Navigator.pushNamed(context, "/detail", arguments: task.id);
           },
