@@ -1,3 +1,3 @@
 # bingyan_todo_list
 
-Bingyan internship project · 2023 Spring
+Bingyan Internship Project · 2023 Spring · Mobile
